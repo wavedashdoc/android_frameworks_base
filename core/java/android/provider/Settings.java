@@ -5496,6 +5496,15 @@ public final class Settings {
                 BOOLEAN_VALIDATOR;
 
         /**
+         * @hide
+         */
+        public static final String FORCE_SHOW_NAVBAR = "navigation_bar_show_new";
+
+        /** @hide */
+        private static final Validator FORCE_SHOW_NAVBAR_VALIDATOR =
+                ANY_INTEGER_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -5625,6 +5634,7 @@ public final class Settings {
             LOCKSCREEN_CHARGING_ANIMATION_STYLE,
             NAVIGATION_HANDLE_WIDTH,
             SCREENSHOT_SOUND,
+            FORCE_SHOW_NAVBAR,
         };
 
         /**
@@ -5819,6 +5829,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(NAVIGATION_BAR_ARROW_KEYS);
             PRIVATE_SETTINGS.add(NAVIGATION_HANDLE_WIDTH);
             PRIVATE_SETTINGS.add(SCREENSHOT_SOUND);
+            PRIVATE_SETTINGS.add(FORCE_SHOW_NAVBAR);
         }
 
         /**
@@ -5985,6 +5996,7 @@ public final class Settings {
             VALIDATORS.put(LOCKSCREEN_CHARGING_ANIMATION_STYLE, LOCKSCREEN_CHARGING_ANIMATION_STYLE_VALIDATOR);
             VALIDATORS.put(NAVIGATION_HANDLE_WIDTH, NAVIGATION_HANDLE_WIDTH_VALIDATOR);
             VALIDATORS.put(SCREENSHOT_SOUND, SCREENSHOT_SOUND_VALIDATOR);
+            VALIDATORS.put(FORCE_SHOW_NAVBAR, FORCE_SHOW_NAVBAR_VALIDATOR);
         }
 
         /**
