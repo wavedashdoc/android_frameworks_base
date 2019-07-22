@@ -32,6 +32,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.ViewTreeObserver;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -253,14 +254,19 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     private void startTimer() {
         clearTimer();
         if (mIsViewVisible) {
-            mSeekBarTimer = new Timer(true /* isDaemon */);
-            mSeekBarTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    mHandler.post(mOnUpdateTimerTick);
-                }
-            }, 0, PROGRESS_UPDATE_INTERVAL);
+            updateSeekBarView();
         }
+    }
+
+    private void updateSeekBarView() {
+        mSeekBarView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener(){
+            @Override
+            public boolean onPreDraw(){
+                mSeekBarView.getViewTreeObserver().removeOnPreDrawListener(this);
+                mHandler.postDelayed(mOnUpdateTimerTick,PROGRESS_UPDATE_INTERVAL);
+                return true;
+            }
+        });
     }
 
     private void clearTimer() {
@@ -318,6 +324,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         public void run() {
             if (mMediaController != null && mSeekBar != null) {
                 PlaybackState playbackState = mMediaController.getPlaybackState();
+                updateSeekBarView();
                 if (playbackState != null) {
                     updatePlaybackUi(playbackState);
                 } else {
