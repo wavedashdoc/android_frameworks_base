@@ -6356,4 +6356,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
         return true;
     }
+
+    @Override
+    public void takeAlternativeScreenshot() {
+        mScreenshotRunnable.setScreenshotType(TAKE_SCREENSHOT_FULLSCREEN);
+        mHandler.post(mScreenshotRunnable);
+    }
 }
