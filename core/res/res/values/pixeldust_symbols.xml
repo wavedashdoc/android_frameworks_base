@@ -110,4 +110,7 @@
     <java-symbol type="string" name="config_lightFontFamily" />
     <java-symbol type="string" name="config_regularFontFamily" />
 
+    <!-- Bluetooth service -->
+    <java-symbol type="string" name="bluetooth_airplane_mode_toast" />
+
 </resources>
