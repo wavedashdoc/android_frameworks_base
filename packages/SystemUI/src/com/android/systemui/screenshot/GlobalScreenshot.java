@@ -100,6 +100,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.config.sysui.SystemUiDeviceConfigFlags;
 import com.android.internal.messages.nano.SystemMessageProto.SystemMessage;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.internal.util.pixeldust.PixeldustUtils;
 import com.android.systemui.R;
 import com.android.systemui.SysUiServiceProvider;
 import com.android.systemui.SystemUI;
@@ -826,6 +827,7 @@ class GlobalScreenshot {
 
         setBlockedGesturalNavigation(true);
         mWindowManager.addView(mScreenshotLayout, mWindowLayoutParams);
+        PixeldustUtils.setPartialScreenshot(true);
         mScreenshotSelectorView.setSelectionListener(
                 new ScreenshotSelectorView.OnSelectionListener() {
             @Override
@@ -874,6 +876,7 @@ class GlobalScreenshot {
     }
 
     void hideScreenshotSelector() {
+        PixeldustUtils.setPartialScreenshot(false);
         mWindowManager.removeView(mScreenshotLayout);
         mScreenshotSelectorView.stopSelection();
         mScreenshotSelectorView.setVisibility(View.GONE);
@@ -890,7 +893,8 @@ class GlobalScreenshot {
             mWindowManager.removeView(mScreenshotLayout);
             mScreenshotSelectorView.stopSelection();
         }
-
+        // called when unbinding screenshot service
+        PixeldustUtils.setPartialScreenshot(false);
         setBlockedGesturalNavigation(false);
     }
 
