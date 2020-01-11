@@ -5258,6 +5258,24 @@ public final class Settings {
         public static final String SWIPE_TO_SCREENSHOT = "swipe_to_screenshot";
 
         /**
+         * Whether to show Brightness Icon On Brightness Slider
+         * @hide
+         */
+        public static final String QS_SHOW_BRIGHTNESS_ICON = "qs_show_brightness_icon";
+
+        /** @hide */
+        private static final Validator QS_SHOW_BRIGHTNESS_ICON_VALIDATOR = BOOLEAN_VALIDATOR;
+
+        /**
+         * Whether to show Min-Max button On Brightness Slider
+         * @hide
+         */
+        public static final String QS_SHOW_BRIGHTNESS_MINMAX = "qs_show_brightness_minmax";
+
+        /** @hide */
+        private static final Validator QS_SHOW_BRIGHTNESS_MINMAX_VALIDATOR = BOOLEAN_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -5374,6 +5392,8 @@ public final class Settings {
             PULSE_AMBIENT_AUTO_COLOR,
             PULSE_AMBIENT_LIGHT_DURATION,
             CLOCK_SHOW_STATUS_AREA,
+            QS_SHOW_BRIGHTNESS_ICON,
+            QS_SHOW_BRIGHTNESS_MINMAX,
         };
 
         /**
@@ -5557,6 +5577,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(PULSE_AMBIENT_AUTO_COLOR);
             PRIVATE_SETTINGS.add(PULSE_AMBIENT_LIGHT_DURATION);
             PRIVATE_SETTINGS.add(CLOCK_SHOW_STATUS_AREA);
+            PRIVATE_SETTINGS.add(QS_SHOW_BRIGHTNESS_ICON);
+            PRIVATE_SETTINGS.add(QS_SHOW_BRIGHTNESS_MINMAX);
         }
 
         /**
@@ -5710,6 +5732,8 @@ public final class Settings {
             VALIDATORS.put(PULSE_AMBIENT_AUTO_COLOR, PULSE_AMBIENT_AUTO_COLOR_VALIDATOR);
             VALIDATORS.put(PULSE_AMBIENT_LIGHT_DURATION, PULSE_AMBIENT_LIGHT_DURATION_VALIDATOR);
             VALIDATORS.put(CLOCK_SHOW_STATUS_AREA, CLOCK_SHOW_STATUS_AREA_VALIDATOR);
+            VALIDATORS.put(QS_SHOW_BRIGHTNESS_ICON, QS_SHOW_BRIGHTNESS_ICON_VALIDATOR);
+            VALIDATORS.put(QS_SHOW_BRIGHTNESS_MINMAX, QS_SHOW_BRIGHTNESS_MINMAX_VALIDATOR);
         }
 
         /**
