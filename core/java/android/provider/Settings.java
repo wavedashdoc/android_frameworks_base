@@ -5020,12 +5020,6 @@ public final class Settings {
         public static final String AMBIENT_BATTERY_PERCENT = "ambient_battery_percent";
 
         /**
-         * Three Finger Gesture from Oppo
-         * @hide
-         */
-        public static final String THREE_FINGER_GESTURE = "three_finger_gesture";
-
-        /**
          * Display style of the status bar battery information
          *    0: Display the battery as portrait icon (default)
          *    1: Display the battery as dotted circle
