@@ -113,4 +113,7 @@
     <!-- Bluetooth service -->
     <java-symbol type="string" name="bluetooth_airplane_mode_toast" />
 
+    <!-- ADB notification -->
+    <java-symbol type="drawable" name="stat_sys_data_usb_custom" />
+
 </resources>
