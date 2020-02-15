@@ -1614,7 +1614,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         @Override
         public void run() {
             boolean dockMinimized = mWindowManagerInternal.isMinimizedDock();
-            mDefaultDisplayPolicy.takeScreenshot(mScreenshotType, dockMinimized);
+            if (!mPocketLockShowing) {
+                mDefaultDisplayPolicy.takeScreenshot(mScreenshotType, dockMinimized);
+            }
         }
     }
 
@@ -1629,6 +1631,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     void showGlobalActionsInternal(boolean hapticFeedback) {
         final boolean keyguardShowing = isKeyguardShowingAndNotOccluded();
         stopLongshot();
+        if (keyguardShowing && !isGlobalActionEnabled()) {
+            return;
+        }
         if (hapticFeedback) {
 		performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, false,
                     "Power - Very Long Press - Show Global Actions");
@@ -1994,7 +1999,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mSwipeToScreenshot = new SwipeToScreenshotListener(context, new SwipeToScreenshotListener.Callbacks() {
             @Override
             public void onSwipeThreeFinger() {
-                mHandler.post(mScreenshotRunnable);
+                if (!mPocketLockShowing) {
+                    mHandler.post(mScreenshotRunnable);
+                }
             }
         });
         mWakeGestureListener = new MyWakeGestureListener(mContext, mHandler);
@@ -2328,6 +2335,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mGlobalActionsOnLockDisable = Settings.System.getIntForUser(resolver,
                     Settings.System.LOCK_POWER_MENU_DISABLED, 0,
                     UserHandle.USER_CURRENT) != 0;
+
             mTorchActionMode = Settings.Secure.getIntForUser(resolver,
                     Settings.Secure.TORCH_POWER_BUTTON_GESTURE, 0,
                     UserHandle.USER_CURRENT);
