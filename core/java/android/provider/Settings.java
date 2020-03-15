@@ -5200,6 +5200,9 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_CHARGING_ANIMATION_STYLE = "lockscreen_charging_animation_style";
 
+        private static final Validator LOCKSCREEN_CHARGING_ANIMATION_STYLE_VALIDATOR =
+                new SettingsValidators.InclusiveIntegerRangeValidator(0, 5);
+
         /**
          * Whether to enable PULSE Edge lights
          * @hide
@@ -5583,6 +5586,7 @@ public final class Settings {
             QS_SHOW_BRIGHTNESS_ICON,
             QS_SHOW_BRIGHTNESS_MINMAX,
             NAVIGATION_BAR_ARROW_KEYS,
+            LOCKSCREEN_CHARGING_ANIMATION_STYLE,
         };
 
         /**
@@ -5935,6 +5939,7 @@ public final class Settings {
             VALIDATORS.put(QS_SHOW_BRIGHTNESS_ICON, QS_SHOW_BRIGHTNESS_ICON_VALIDATOR);
             VALIDATORS.put(QS_SHOW_BRIGHTNESS_MINMAX, QS_SHOW_BRIGHTNESS_MINMAX_VALIDATOR);
             VALIDATORS.put(NAVIGATION_BAR_ARROW_KEYS, NAVIGATION_BAR_ARROW_KEYS_VALIDATOR);
+            VALIDATORS.put(LOCKSCREEN_CHARGING_ANIMATION_STYLE, LOCKSCREEN_CHARGING_ANIMATION_STYLE_VALIDATOR);
         }
 
         /**
