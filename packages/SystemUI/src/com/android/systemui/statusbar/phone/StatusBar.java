@@ -273,6 +273,8 @@ import javax.inject.Named;
 
 import dagger.Subcomponent;
 
+import com.android.internal.util.custom.NavbarUtils;
+
 public class StatusBar extends SystemUI implements DemoMode,
         ActivityStarter, OnUnlockMethodChangedListener,
         OnHeadsUpChangedListener, CommandQueue.Callbacks, ZenModeController.Callback,
@@ -791,18 +793,11 @@ public class StatusBar extends SystemUI implements DemoMode,
     }
 
     private void updateNavigationBarVisibility() {
-        if (mDisplayId == Display.DEFAULT_DISPLAY && mWindowManagerService != null) {
-            int mDefNavBar;
-            if (mNeedsNavigationBar) {
-                mDefNavBar = 1;
-            } else {
-                mDefNavBar = 0;
-            }
-            boolean forcedVisibility = Settings.System.getIntForUser(
-                    mContext.getContentResolver(), Settings.System.FORCE_SHOW_NAVBAR,
-                    mDefNavBar, UserHandle.USER_CURRENT) == 1;
+        if (mDisplayId == Display.DEFAULT_DISPLAY &&
+                mWindowManagerService != null) {
+            boolean navbarEnabled = NavbarUtils.isEnabled(mContext);
             boolean hasNavbar = getNavigationBarView() != null;
-            if (forcedVisibility) {
+            if (navbarEnabled) {
                 if (!hasNavbar) {
                     try {
                         mNavigationBarController.onDisplayReady(mDisplayId,
@@ -1403,6 +1398,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         mBubbleController = Dependency.get(BubbleController.class);
         mColorExtractor = Dependency.get(SysuiColorExtractor.class);
         mNavigationBarController = Dependency.get(NavigationBarController.class);
+        mNavigationBarSystemUiVisibility = mNavigationBarController.createSystemUiVisibility();
         mUserSwitcherController = Dependency.get(UserSwitcherController.class);
         mVibratorHelper = Dependency.get(VibratorHelper.class);
     }

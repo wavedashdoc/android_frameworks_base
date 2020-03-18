@@ -111,6 +111,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.android.internal.util.custom.NavbarUtils;
+
 /**
  * The power manager service is responsible for coordinating power management
  * functions on the device.
@@ -779,6 +781,8 @@ public final class PowerManagerService extends SystemService
     private static native void nativeSetFeature(int featureId, int data);
     private static native boolean nativeForceSuspend();
 
+    private boolean mNavbarEnabled;
+
     public PowerManagerService(Context context) {
         this(context, new Injector());
     }
@@ -993,6 +997,9 @@ public final class PowerManagerService extends SystemService
         resolver.registerContentObserver(Settings.System.getUriFor(
                 Settings.System.AOD_NOTIFICATION_PULSE),
                 false, mSettingsObserver, UserHandle.USER_ALL);
+        resolver.registerContentObserver(Settings.System.getUriFor(
+                Settings.System.FORCE_SHOW_NAVBAR),
+                false, mSettingsObserver, UserHandle.USER_ALL);
 
         IVrManager vrManager = IVrManager.Stub.asInterface(getBinderService(Context.VR_SERVICE));
         if (vrManager != null) {
@@ -1168,6 +1175,8 @@ public final class PowerManagerService extends SystemService
         mWakeUpWhenPluggedOrUnpluggedSetting = Settings.Global.getInt(resolver,
                 Settings.Global.WAKE_WHEN_PLUGGED_OR_UNPLUGGED,
                 (mWakeUpWhenPluggedOrUnpluggedConfig ? 1 : 0));
+
+        mNavbarEnabled = NavbarUtils.isEnabled(mContext);
 
         mDirty |= DIRTY_SETTINGS;
     }
@@ -2237,7 +2246,7 @@ public final class PowerManagerService extends SystemService
                                 if (mButtonBrightnessOverrideFromWindowManager >= 0) {
                                     buttonBrightness = mButtonBrightnessOverrideFromWindowManager;
                                 } else {
-                                    buttonBrightness = mButtonBrightness;
+                                    buttonBrightness = !mNavbarEnabled ? mButtonBrightness : 0;
                                 }
                             }
 

@@ -135,7 +135,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.ArraySet;
@@ -182,6 +181,8 @@ import com.android.server.wallpaper.WallpaperManagerInternal;
 import com.android.server.wm.utils.InsetUtils;
 
 import java.io.PrintWriter;
+
+import com.android.internal.util.custom.NavbarUtils;
 
 /**
  * The policy that provides the basic behaviors and states of a display to show UI.
@@ -257,7 +258,6 @@ public class DisplayPolicy {
 
     private volatile boolean mHasStatusBar;
     private volatile boolean mHasNavigationBar;
-    private volatile int mForceNavbar = -1;
     // Can the navigation bar ever move to the side?
     private volatile boolean mNavigationBarCanMove;
     private volatile boolean mNavigationBarLetsThroughTaps;
@@ -616,26 +616,25 @@ public class DisplayPolicy {
 
         if (mDisplayContent.isDefaultDisplay) {
             mHasStatusBar = true;
-            mHasNavigationBar = mContext.getResources().getBoolean(R.bool.config_showNavigationBar);
-
-            // Allow a system property to override this. Used by the emulator.
-            // See also hasNavigationBar().
-            String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
-            if ("1".equals(navBarOverride)) {
-                mHasNavigationBar = false;
-            } else if ("0".equals(navBarOverride)) {
-                mHasNavigationBar = true;
-            }
         } else {
             mHasStatusBar = false;
-            mHasNavigationBar = mDisplayContent.supportsSystemDecorations();
         }
+
+        updateNavigationBarState();
 
         mRefreshRatePolicy = new RefreshRatePolicy(mService,
                 mDisplayContent.getDisplayInfo(),
                 mService.mHighRefreshRateBlacklist);
 
         mSettingsObserver = new SettingsObserver(mHandler);
+    }
+
+    private void updateNavigationBarState() {
+        if (mDisplayContent.isDefaultDisplay) {
+            mHasNavigationBar = NavbarUtils.isEnabled(mContext);
+        } else {
+            mHasNavigationBar = mDisplayContent.supportsSystemDecorations();
+        }
     }
 
     void systemReady() {
@@ -646,18 +645,7 @@ public class DisplayPolicy {
     }
 
     public void updateSettings() {
-        ContentResolver resolver = mContext.getContentResolver();
-
-        int mDefNavBar;
-        if (mHasNavigationBar) {
-            mDefNavBar = 1;
-        } else {
-            mDefNavBar = 0;
-        }
-
-        mForceNavbar = Settings.System.getIntForUser(resolver,
-                Settings.System.FORCE_SHOW_NAVBAR, mDefNavBar,
-                UserHandle.USER_CURRENT);
+        updateNavigationBarState();
     }
 
     private int getDisplayId() {
@@ -715,7 +703,7 @@ public class DisplayPolicy {
     }
 
     public boolean hasNavigationBar() {
-        return mForceNavbar == 1;
+        return mHasNavigationBar;
     }
 
     public boolean hasStatusBar() {

@@ -138,4 +138,7 @@
     <!-- FOD -->
     <java-symbol type="bool" name="config_needCustomFODView"/>
 
+    <!-- Whether device can force navbar disabling -->
+    <java-symbol type="bool" name="config_canForceDisableNavigationBar" />
+
 </resources>

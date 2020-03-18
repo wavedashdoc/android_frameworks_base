@@ -135,4 +135,7 @@
     <!-- FOD -->
     <bool name="config_needCustomFODView">false</bool>
 
+    <!-- Whether device can force navbar disabling -->
+    <bool name="config_canForceDisableNavigationBar">false</bool>
+
 </resources>
