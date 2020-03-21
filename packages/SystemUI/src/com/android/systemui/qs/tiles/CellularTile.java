@@ -89,6 +89,11 @@ public class CellularTile extends QSTileImpl<SignalState> {
     }
 
     @Override
+    public boolean isDualTarget() {
+        return true;
+    }
+
+    @Override
     public SignalState newTileState() {
         return new SignalState();
     }
@@ -333,13 +338,7 @@ public class CellularTile extends QSTileImpl<SignalState> {
     }
 
     static Intent getCellularSettingIntent() {
-        Intent intent = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
-        int dataSub = SubscriptionManager.getDefaultDataSubscriptionId();
-        if (dataSub != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-            intent.putExtra(Settings.EXTRA_SUB_ID,
-                    SubscriptionManager.getDefaultDataSubscriptionId());
-        }
-        return intent;
+        return new Intent(Settings.Panel.ACTION_MOBILE_DATA);
     }
 
     private final class CellularDetailAdapter implements DetailAdapter {
@@ -377,9 +376,15 @@ public class CellularTile extends QSTileImpl<SignalState> {
             final DataUsageDetailView v = (DataUsageDetailView) (convertView != null
                     ? convertView
                     : LayoutInflater.from(mContext).inflate(R.layout.data_usage, parent, false));
-            final DataUsageController.DataUsageInfo info = mDataController.getDataUsageInfo(
-                    DataUsageUtils.getMobileTemplate(mContext,
-                            SubscriptionManager.getDefaultDataSubscriptionId()));
+
+            DataUsageController.DataUsageInfo info = null;
+            int defaultSubId = SubscriptionManager.getDefaultDataSubscriptionId();
+            if (defaultSubId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                info = mDataController.getDataUsageInfo();
+            } else {
+                info = mDataController.getDataUsageInfo(
+                        DataUsageUtils.getMobileTemplate(mContext, defaultSubId));
+            }
             if (info == null) return v;
             v.bind(info);
             v.findViewById(R.id.roaming_text).setVisibility(mSignalCallback.mInfo.roaming
