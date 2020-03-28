@@ -156,6 +156,8 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
                 R.string.system_theme_style_solarizeddark, "solarized_dark"));
         sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
                 R.string.system_theme_style_chocox, "choco_x"));
+        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
+                R.string.system_theme_style_shishunights, "shishu_nights"));
     }
 
     private enum Mode {
@@ -360,6 +362,15 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
                     try {
                         mOverlayManager.setEnabled(choco_x,
                                 themeItem.uri.equals("choco_x"), USER_SYSTEM);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                for (int i = 0; i < ThemesUtils.SHISHU_NIGHTS.length; i++) {
+                    String shishu_nights = ThemesUtils.SHISHU_NIGHTS[i];
+                    try {
+                        mOverlayManager.setEnabled(shishu_nights,
+                                themeItem.uri.equals("shishu_nights"), USER_SYSTEM);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }

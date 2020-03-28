@@ -89,6 +89,12 @@ public class ThemesUtils {
             "com.android.theme.chocox.systemui",
     };
 
+    public static final String[] SHISHU_NIGHTS = {
+            "com.android.theme.shishunights.system",
+            "com.android.theme.shishunights.systemui",
+            "com.android.theme.shishunights.settings",
+    };
+
     public static final String[] STATUSBAR_ICONS = {
             "com.android.theme.icon_pack.filled.android",
             "com.android.theme.icon_pack.rounded.android",
