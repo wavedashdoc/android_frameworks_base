@@ -108,9 +108,12 @@
     <java-symbol type="color" name="theme_generic_semi_transparent_color" />
     <java-symbol type="color" name="du_themes_qs_inactive_color" />
 
-    <!-- Light / Regular style fonts -->
+    <!-- Fonts -->
     <java-symbol type="string" name="config_lightFontFamily" />
     <java-symbol type="string" name="config_regularFontFamily" />
+    <java-symbol type="string" name="config_headlineFontFamilyMedium" />
+    <java-symbol type="string" name="config_bodyFontFamily" />
+    <java-symbol type="string" name="config_bodyFontFamilyMedium" />
 
     <!-- Bluetooth service -->
     <java-symbol type="string" name="bluetooth_airplane_mode_toast" />
