@@ -131,4 +131,6 @@ interface IStatusBarService
 
     void killForegroundApp();
     void setPartialScreenshot(boolean active);
+
+    void screenPinningStateChanged(boolean enabled);
 }
