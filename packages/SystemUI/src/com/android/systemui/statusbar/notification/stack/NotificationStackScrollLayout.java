@@ -88,6 +88,7 @@ import com.android.systemui.Interpolators;
 import com.android.systemui.R;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
+import com.android.systemui.doze.DozeLog;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
@@ -235,6 +236,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private int mBottomMargin;
     private int mBottomInset = 0;
     private float mQsExpansionFraction;
+    private boolean mForcedMediaDoze;
 
     /**
      * The algorithm which calculates the properties for our children
@@ -849,6 +851,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    public void setCleanLayout(int reason) {
+        mForcedMediaDoze =
+                reason == DozeLog.PULSE_REASON_FORCED_MEDIA_NOTIFICATION;
+    }
+
     @ShadeViewRefactor(RefactorComponent.DECORATOR)
     private void drawBackground(Canvas canvas) {
         int lockScreenLeft = mSidePaddings;
@@ -885,7 +892,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (mKeyguardBypassController.getBypassEnabled() && onKeyguard()) {
             shouldDrawBackground = isPulseExpanding();
         } else {
-            shouldDrawBackground = !mAmbientState.isDozing() || anySectionHasVisibleChild;
+            shouldDrawBackground = !mAmbientState.isDozing() || anySectionHasVisibleChild || !mForcedMediaDoze;
         }
         if (shouldDrawBackground) {
             drawBackgroundRects(canvas, left, right, top, backgroundTopAnimationOffset);

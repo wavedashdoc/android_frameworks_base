@@ -150,4 +150,6 @@
     <!-- Screen off delay -->
     <integer name="config_screen_off_delay">0</integer>
 
+    <bool name="config_canForceDozeNotifications">true</bool>
+
 </resources>
