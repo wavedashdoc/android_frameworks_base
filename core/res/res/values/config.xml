@@ -4282,4 +4282,8 @@
     <!-- Boolean indicating whether frameworks needs to reset cell broadcast geo-fencing
          check after reboot or airplane mode toggling -->
     <bool translatable="false" name="reset_geo_fencing_check_after_boot_or_apm">false</bool>
+
+    <!-- Whether to show activity indicators in the status bar -->
+    <bool name="config_showActivity">true</bool>
+
 </resources>
