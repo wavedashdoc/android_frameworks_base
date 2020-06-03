@@ -12,19 +12,10 @@
  * permissions and limitations under the License.
  */
 
-package com.android.systemui.utils.leaks;
+package com.android.systemui;
 
-import com.android.systemui.statusbar.policy.ConfigurationController;
+import android.content.res.Configuration;
 
-public class FakeConfigurationController
-        extends BaseLeakChecker<ConfigurationController.ConfigurationListener>
-        implements ConfigurationController {
-
-    public FakeConfigurationController(LeakCheckedTest.SysuiLeakCheck sysuiLeakCheck) {
-        super(sysuiLeakCheck, "config");
-    }
-
-    @Override
-    public void notifyThemeChanged() {
-    }
+public interface ConfigurationChangedReceiver {
+    void onConfigurationChanged(Configuration newConfiguration);
 }
