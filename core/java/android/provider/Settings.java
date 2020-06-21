@@ -5974,6 +5974,16 @@ public final class Settings {
         private static final Validator FORCE_AMBIENT_FOR_MEDIA_VALIDATOR = ANY_INTEGER_VALIDATOR;
 
         /**
+         * Whether to use transparent color for ambient indication background
+         * @hide
+         */
+        public static final String AMBIENT_INDICATION_TRANSPARENT_BGCOLOR = "ambient_indication_transparent_bgcolor";
+
+        /** @hide */
+        private static final Validator AMBIENT_INDICATION_TRANSPARENT_BGCOLOR_VALIDATOR =
+                BOOLEAN_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -6134,6 +6144,7 @@ public final class Settings {
             LOCK_SHOW_STATUS_BAR,
             DATA_ACTIVITY_ARROW,
             FORCE_AMBIENT_FOR_MEDIA,
+            AMBIENT_INDICATION_TRANSPARENT_BGCOLOR,
         };
 
         /**
@@ -6553,6 +6564,7 @@ public final class Settings {
             VALIDATORS.put(QS_BRIGHTNESS_SLIDER_FOOTER, QS_BRIGHTNESS_SLIDER_FOOTER_VALIDATOR);
             VALIDATORS.put(DATA_ACTIVITY_ARROW, DATA_ACTIVITY_ARROW_VALIDATOR);
             VALIDATORS.put(FORCE_AMBIENT_FOR_MEDIA, FORCE_AMBIENT_FOR_MEDIA_VALIDATOR);
+            VALIDATORS.put(AMBIENT_INDICATION_TRANSPARENT_BGCOLOR, AMBIENT_INDICATION_TRANSPARENT_BGCOLOR_VALIDATOR);
         }
 
         /**
