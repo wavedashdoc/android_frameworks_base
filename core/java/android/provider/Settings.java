@@ -2585,7 +2585,6 @@ public final class Settings {
             // At one time in System, then Global, but now back in Secure
             MOVED_TO_SECURE.add(Secure.INSTALL_NON_MARKET_APPS);
 
-            MOVED_TO_SECURE.add(Secure.LOCKSCREEN_VISUALIZER_ENABLED);
             MOVED_TO_SECURE.add(Secure.VOLUME_LINK_NOTIFICATION);
         }
 
@@ -10989,14 +10988,6 @@ public final class Settings {
                 "qstile_requires_unlocking";
 
         /**
-         * Enable and disable Lockscreen visualizer
-         * @hide
-         */
-        public static final String LOCKSCREEN_VISUALIZER_ENABLED = "lockscreen_visualizer_enabled";
-
-        private static final Validator LOCKSCREEN_VISUALIZER_ENABLED_VALIDATOR = BOOLEAN_VALIDATOR;
-
-        /**
          * Setting to allow setting rounded corner size and content padding
          * @hide
          */
@@ -11251,7 +11242,6 @@ public final class Settings {
             GLOBAL_ACTIONS_PANEL_ENABLED,
             AWARE_LOCK_ENABLED,
             ADVANCED_REBOOT,
-            LOCKSCREEN_VISUALIZER_ENABLED,
             AWARE_TAP_PAUSE_GESTURE_COUNT,
             AWARE_TAP_PAUSE_TOUCH_COUNT,
             VOLUME_LINK_NOTIFICATION,
@@ -11454,7 +11444,6 @@ public final class Settings {
             VALIDATORS.put(GLOBAL_ACTIONS_PANEL_ENABLED, GLOBAL_ACTIONS_PANEL_ENABLED_VALIDATOR);
             VALIDATORS.put(AWARE_LOCK_ENABLED, AWARE_LOCK_ENABLED_VALIDATOR);
             VALIDATORS.put(ADVANCED_REBOOT, ADVANCED_REBOOT_VALIDATOR);
-            VALIDATORS.put(LOCKSCREEN_VISUALIZER_ENABLED, LOCKSCREEN_VISUALIZER_ENABLED_VALIDATOR);
             VALIDATORS.put(TETHERING_ALLOW_VPN_UPSTREAMS, TETHERING_ALLOW_VPN_UPSTREAMS_VALIDATOR);
             VALIDATORS.put(AWARE_TAP_PAUSE_GESTURE_COUNT, NON_NEGATIVE_INTEGER_VALIDATOR);
             VALIDATORS.put(AWARE_TAP_PAUSE_TOUCH_COUNT, NON_NEGATIVE_INTEGER_VALIDATOR);
