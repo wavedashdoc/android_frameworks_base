@@ -18,10 +18,8 @@ package com.android.systemui;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.HandlerThread;
-import android.os.Trace;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.util.Size;
@@ -51,7 +49,6 @@ public class ImageWallpaper extends WallpaperService {
     private static final int DELAY_FINISH_RENDERING = 1000;
     private static final int INTERVAL_WAIT_FOR_RENDERING = 100;
     private static final int PATIENCE_WAIT_FOR_RENDERING = 10;
-    private static final boolean DEBUG = true;
     private HandlerThread mWorker;
 
     @Override
@@ -156,15 +153,9 @@ public class ImageWallpaper extends WallpaperService {
 
         @Override
         public void onAmbientModeChanged(boolean inAmbientMode, long animationDuration) {
-            if (mWorker == null || !mNeedTransition) return;
-            final long duration = mShouldStopTransition ? 0 : animationDuration;
-            if (DEBUG) {
-                Log.d(TAG, "onAmbientModeChanged: inAmbient=" + inAmbientMode
-                        + ", duration=" + duration
-                        + ", mShouldStopTransition=" + mShouldStopTransition);
-            }
+            if (!mNeedTransition) return;
             mWorker.getThreadHandler().post(
-                    () -> mRenderer.updateAmbientMode(inAmbientMode, duration));
+                    () -> mRenderer.updateAmbientMode(inAmbientMode, animationDuration));
             if (inAmbientMode && animationDuration == 0) {
                 // This means that we are transiting from home to aod, to avoid
                 // race condition between window visibility and transition,
@@ -217,10 +208,6 @@ public class ImageWallpaper extends WallpaperService {
         public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             if (mWorker == null) return;
             mWorker.getThreadHandler().post(() -> {
-                if (DEBUG) {
-                    Log.d(TAG, "onSurfaceChanged: w=" + width + ", h=" + height);
-                }
-
                 mRenderer.onSurfaceChanged(width, height);
                 mNeedRedraw = true;
             });
@@ -230,12 +217,10 @@ public class ImageWallpaper extends WallpaperService {
         public void onSurfaceRedrawNeeded(SurfaceHolder holder) {
             if (mWorker == null) return;
             mWorker.getThreadHandler().post(() -> {
-                if (DEBUG) {
-                    Log.d(TAG, "onSurfaceRedrawNeeded: mNeedRedraw=" + mNeedRedraw);
-                }
-
                 if (mNeedRedraw) {
-                    drawFrame();
+                    preRender();
+                    requestRender();
+                    postRender();
                     mNeedRedraw = false;
                 }
             });
@@ -264,18 +249,8 @@ public class ImageWallpaper extends WallpaperService {
 
         @Override
         public void preRender() {
-            if (DEBUG) {
-                Log.d(TAG, "preRender start");
-            }
-
             // This method should only be invoked from worker thread.
-            Trace.beginSection("ImageWallpaper#preRender");
             preRenderInternal();
-            Trace.endSection();
-
-            if (DEBUG) {
-                Log.d(TAG, "preRender end");
-            }
         }
 
         private void preRenderInternal() {
@@ -310,9 +285,7 @@ public class ImageWallpaper extends WallpaperService {
         @Override
         public void requestRender() {
             // This method should only be invoked from worker thread.
-            Trace.beginSection("ImageWallpaper#requestRender");
             requestRenderInternal();
-            Trace.endSection();
         }
 
         private void requestRenderInternal() {
@@ -334,19 +307,9 @@ public class ImageWallpaper extends WallpaperService {
 
         @Override
         public void postRender() {
-            if (DEBUG) {
-                Log.d(TAG, "postRender start");
-            }
-
             // This method should only be invoked from worker thread.
-            Trace.beginSection("ImageWallpaper#postRender");
             notifyWaitingThread();
             scheduleFinishRendering();
-            Trace.endSection();
-
-            if (DEBUG) {
-                Log.d(TAG, "postRender end");
-            }
         }
 
         private void notifyWaitingThread() {
@@ -373,18 +336,12 @@ public class ImageWallpaper extends WallpaperService {
         }
 
         private void finishRendering() {
-            if (DEBUG) {
-                Log.d(TAG, "finishRendering, preserve=" + needPreserveEglContext());
-            }
-
-            Trace.beginSection("ImageWallpaper#finishRendering");
             if (mEglHelper != null) {
                 mEglHelper.destroyEglSurface();
                 if (!needPreserveEglContext()) {
                     mEglHelper.destroyEglContext();
                 }
             }
-            Trace.endSection();
         }
 
         private boolean needPreserveEglContext() {

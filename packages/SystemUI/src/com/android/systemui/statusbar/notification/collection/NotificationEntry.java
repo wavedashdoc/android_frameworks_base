@@ -167,7 +167,6 @@ public final class NotificationEntry {
     private boolean mHighPriority;
 
     private boolean mIsTopBucket;
-
     private boolean mSensitive = true;
     private Runnable mOnSensitiveChangedListener;
     private boolean mAutoHeadsUp;
@@ -219,6 +218,30 @@ public final class NotificationEntry {
 
     public void setIsHighPriority(boolean highPriority) {
         this.mHighPriority = highPriority;
+    }
+
+    /**
+     * @return True if the notif should appear in the "top" or "important" section of notifications
+     * (as opposed to the "bottom" or "silent" section). This is usually the same as
+     * {@link #isHighPriority()}, but there are certain exceptions, such as media notifs.
+     */
+    public boolean isTopBucket() {
+        return mIsTopBucket;
+    }
+    public void setIsTopBucket(boolean isTopBucket) {
+        mIsTopBucket = isTopBucket;
+    }
+
+    public boolean isBubble() {
+        return (notification.getNotification().flags & FLAG_BUBBLE) != 0;
+    }
+
+    public void setBubbleDismissed(boolean userDismissed) {
+        mUserDismissedBubble = userDismissed;
+    }
+
+    public boolean isBubbleDismissed() {
+        return mUserDismissedBubble;
     }
 
     /**

@@ -499,7 +499,8 @@ public class StackScrollAlgorithm {
                 continue;
             }
             ExpandableNotificationRow row = (ExpandableNotificationRow) child;
-            if (!row.showingPulsing() || (i == 0 && ambientState.isPulseExpanding())) {
+            if (!row.showingAmbientPulsing() || ambientState.isFullyDark()
+                    || (i == 0 && ambientState.isPulseExpanding())) {
                 continue;
             }
             ExpandableViewState viewState = row.getViewState();

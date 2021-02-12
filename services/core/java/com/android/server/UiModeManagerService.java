@@ -518,25 +518,19 @@ final class UiModeManagerService extends SystemService {
             try {
                 synchronized (mLock) {
                     if (mNightMode != mode) {
-                        if (mNightMode == UiModeManager.MODE_NIGHT_AUTO) {
-                            unregisterScreenOffEvent();
-                        }
-
-                        mNightMode = mode;
-                        mNightModeOverride = mode;
-
                         // Only persist setting if not in car mode
                         if (!mCarModeEnabled) {
-                            persistNightMode(user);
+                            Secure.putIntForUser(getContext().getContentResolver(),
+                                    Secure.UI_NIGHT_MODE, mode, user);
+
+                            if (UserManager.get(getContext()).isPrimaryUser()) {
+                                SystemProperties.set(SYSTEM_PROPERTY_DEVICE_THEME,
+                                        Integer.toString(mode));
+                            }
                         }
-                        // on screen off will update configuration instead
-                        if ((mNightMode != MODE_NIGHT_AUTO)
-                                || shouldApplyAutomaticChangesImmediately()) {
-                            unregisterScreenOffEvent();
-                            updateLocked(0, 0);
-                        } else {
-                            registerScreenOffEvent();
-                        }
+                        
+                        mNightMode = mode;
+                        updateLocked(0, 0);
                     }
                 }
             } finally {

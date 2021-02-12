@@ -43,6 +43,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto;
+import com.android.systemui.R;
 import com.android.systemui.plugins.SensorManagerPlugin;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.util.AlarmTimeout;
@@ -298,14 +299,10 @@ public class DozeSensors {
 
             // The default prox sensor can be noisy, so let's use a prox gated brightness sensor
             // if available.
-            Sensor sensor = ProximitySensor.findCustomProxSensor(mContext, mSensorManager);
-            mUsingBrightnessSensor = sensor != null;
-            if (mUsingBrightnessSensor) {
-                mSensorThreshold = ProximitySensor.getBrightnessSensorThreshold(
-                        mContext.getResources());
-            } else {
+            Sensor sensor = DozeSensors.findSensorWithType(mSensorManager,
+                    mContext.getString(R.string.doze_brightness_sensor_type));
+            if (sensor == null) {
                 sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-                mSensorThreshold = sensor == null ? 0 : sensor.getMaximumRange();
             }
             mSensor = sensor;
         }

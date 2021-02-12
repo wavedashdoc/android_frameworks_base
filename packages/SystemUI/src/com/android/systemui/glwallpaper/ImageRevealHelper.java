@@ -72,13 +72,16 @@ class ImageRevealHelper {
             @Override
             public void onAnimationStart(Animator animation) {
                 if (mRevealListener != null) {
-                    if (DEBUG) {
-                        Log.d(TAG, "transition start");
-                    }
                     mRevealListener.onRevealStart(true /* animate */);
                 }
             }
         });
+    }
+
+    private void animate() {
+        mAnimator.cancel();
+        mAnimator.setFloatValues(mReveal, mAwake ? MAX_REVEAL : MIN_REVEAL);
+        mAnimator.start();
     }
 
     public float getReveal() {
@@ -91,6 +94,7 @@ class ImageRevealHelper {
         }
         mAnimator.cancel();
         mAwake = awake;
+        mAnimator.setDuration(duration);
         if (duration == 0) {
             // We are transiting from home to aod or aod to home directly,
             // we don't need to do transition in these cases.

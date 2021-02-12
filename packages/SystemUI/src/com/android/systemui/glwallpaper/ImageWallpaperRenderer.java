@@ -69,7 +69,8 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer,
         }
 
         DisplayInfo displayInfo = new DisplayInfo();
-        context.getDisplay().getDisplayInfo(displayInfo);
+        WindowManager wm = context.getSystemService(WindowManager.class);
+        wm.getDefaultDisplay().getDisplayInfo(displayInfo);
 
         // We only do transition in portrait currently, b/137962047.
         int orientation = context.getResources().getConfiguration().orientation;
@@ -106,18 +107,12 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer,
     }
 
     private boolean loadBitmap() {
-        if (DEBUG) {
-            Log.d(TAG, "loadBitmap: mBitmap=" + mBitmap);
-        }
         if (mWallpaperManager != null && mBitmap == null) {
             mBitmap = mWallpaperManager.getBitmap();
             mWallpaperManager.forgetLoadedWallpaper();
             if (mBitmap != null) {
                 mSurfaceSize.set(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
             }
-        }
-        if (DEBUG) {
-            Log.d(TAG, "loadBitmap done, surface size=" + mSurfaceSize);
         }
         return mBitmap != null;
     }
@@ -193,28 +188,16 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer,
 
     @Override
     public void onRevealStart(boolean animate) {
-        if (DEBUG) {
-            Log.v(TAG, "onRevealStart: start, anim=" + animate);
-        }
-
         if (animate) {
             mScissorMode = true;
             // Use current display area of texture.
             mWallpaper.adjustTextureCoordinates(mSurfaceSize, mScissor, mXOffset, mYOffset);
         }
         mProxy.preRender();
-
-        if (DEBUG) {
-            Log.v(TAG, "onRevealStart: done");
-        }
     }
 
     @Override
     public void onRevealEnd() {
-        if (DEBUG) {
-            Log.v(TAG, "onRevealEnd: start, mScissorMode=" + mScissorMode);
-        }
-
         if (mScissorMode) {
             mScissorMode = false;
             // reset texture coordinates to use full texture.
@@ -223,10 +206,6 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer,
             mProxy.requestRender();
         }
         mProxy.postRender();
-
-        if (DEBUG) {
-            Log.v(TAG, "onRevealEnd: done");
-        }
     }
 
     @Override
@@ -239,7 +218,6 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer,
         out.print(prefix); out.print("mXOffset="); out.print(mXOffset);
         out.print(prefix); out.print("mYOffset="); out.print(mYOffset);
         out.print(prefix); out.print("threshold="); out.print(mImageProcessHelper.getThreshold());
-        out.print(prefix); out.print("mReveal="); out.print(mImageRevealHelper.getReveal());
         mWallpaper.dump(prefix, fd, out, args);
     }
 }

@@ -1788,7 +1788,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         mBiometricUnlockController = new BiometricUnlockController(mContext,
                 mDozeScrimController, keyguardViewMediator,
                 mScrimController, this, UnlockMethodCache.getInstance(mContext),
-                new Handler(), mKeyguardUpdateMonitor, mKeyguardBypassController);
+                new Handler(), mKeyguardUpdateMonitor, Dependency.get(TunerService.class));
         putComponent(BiometricUnlockController.class, mBiometricUnlockController);
         mStatusBarKeyguardViewManager = keyguardViewMediator.registerStatusBar(this,
                 getBouncerContainer(), mNotificationPanel, mBiometricUnlockController,

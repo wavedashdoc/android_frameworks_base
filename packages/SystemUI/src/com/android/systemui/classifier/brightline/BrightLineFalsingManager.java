@@ -52,6 +52,10 @@ public class BrightLineFalsingManager implements FalsingManager {
     private boolean mShowingAod;
     private boolean mScreenOn;
     private boolean mJustUnlockedWithFace;
+    private boolean mShowingAod;
+    private boolean mScreenOn;
+
+    private final ExecutorService mBackgroundExecutor = Executors.newSingleThreadExecutor();
 
     private final List<FalsingClassifier> mClassifiers;
 

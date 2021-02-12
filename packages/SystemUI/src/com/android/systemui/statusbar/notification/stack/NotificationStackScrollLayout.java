@@ -554,7 +554,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             clearNotifications(ROWS_GENTLE, closeShade, false/*forceToLeft*/);
         });
 
-        mAmbientState = new AmbientState(context, mSectionsManager, mHeadsUpManager);
+        mAmbientState = new AmbientState(context, mSectionsManager);
+        mRoundnessManager = notificationRoundnessManager;
         mBgColor = context.getColor(R.color.notification_shade_background_color);
         int minHeight = res.getDimensionPixelSize(R.dimen.notification_min_height);
         int maxHeight = res.getDimensionPixelSize(R.dimen.notification_max_height);
@@ -563,14 +564,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         mExpandHelper.setEventSource(this);
         mExpandHelper.setScrollAdapter(this);
         mSwipeHelper = new NotificationSwipeHelper(SwipeHelper.X, mNotificationCallback,
-                getContext(), mMenuEventListener, mFalsingManager);
+                getContext(), mMenuEventListener);
         mStackScrollAlgorithm = createStackScrollAlgorithm(context);
         initView(context);
+        mFalsingManager = FalsingManagerFactory.getInstance(context);
+        mShouldDrawNotificationBackground =
+                res.getBoolean(R.bool.config_drawNotificationBackground);
         mFadeNotificationsOnDismiss =
                 res.getBoolean(R.bool.config_fadeNotificationsOnDismiss);
         mRoundnessManager.setAnimatedChildren(mChildrenToAddAnimated);
         mRoundnessManager.setOnRoundingChangedCallback(this::invalidate);
-        addOnExpandedHeightChangedListener(mRoundnessManager::setExpanded);
+        addOnExpandedHeightListener(mRoundnessManager::setExpanded);
         mLockscreenUserManager.addUserChangedListener(userId ->
                 updateSensitiveness(false /* animated */));
         setOutlineProvider(mOutlineProvider);
@@ -1437,12 +1441,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             mIsClipped = clipped;
         }
 
-        if (mAmbientState.isHiddenAtAll()) {
+        if (!mPulsing && mAmbientState.isFullyDark()) {
+            setClipBounds(null);
+        } else if (mAmbientState.isDarkAtAll()) {
             clipToOutline = true;
             invalidateOutline();
-            if (isFullyHidden()) {
-                setClipBounds(null);
-            }
         } else if (clipped) {
             setClipBounds(mRequestedClipBounds);
         } else {
@@ -2617,9 +2620,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     false /* shiftPulsingWithFirst */);
             minTopPosition = firstVisibleSection.getBounds().top;
         }
-        boolean shiftPulsingWithFirst = mHeadsUpManager.getAllEntries().count() <= 1
-                && (mAmbientState.isDozing()
-                        || (mKeyguardBypassController.getBypassEnabled() && onKeyguard));
+        boolean shiftPulsingWithFirst = mAmbientPulseManager.getAllEntries().count() <= 1;
         for (NotificationSection section : mSections) {
             int minBottomPosition = minTopPosition;
             if (section == lastSection) {
@@ -5203,6 +5204,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return;
         }
         mPulsing = pulsing;
+        updateClipping();
         mAmbientState.setPulsing(pulsing);
         mSwipeHelper.setPulsing(pulsing);
         updateNotificationAnimationStates();

@@ -88,8 +88,6 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable,
     private boolean mHeadsUpGoingAway;
     private int mStatusBarState;
     private Region mTouchableRegion = new Region();
-    private boolean mDozing;
-    private int mPulseDurationDecay;
 
     private AnimationStateHandler mAnimationStateHandler;
 
