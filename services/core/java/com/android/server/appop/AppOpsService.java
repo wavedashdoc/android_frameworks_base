@@ -1846,6 +1846,7 @@ public class AppOpsService extends IAppOpsService.Stub {
      * @param uid The uid of the package the op belongs to
      * @param packageName The package the op belongs to
      * @param raw If the raw state of eval-ed state should be checked.
+     * @param verify If the code should check the package belongs to the uid
      *
      * @return The mode of the op
      */
@@ -1855,7 +1856,10 @@ public class AppOpsService extends IAppOpsService.Stub {
             return AppOpsManager.MODE_IGNORED;
         }
         synchronized (this) {
-            if (isOpRestrictedLocked(uid, code, packageName, isPrivileged)) {
+            if (verify) {
+                checkPackage(uid, packageName);
+            }
+            if (isOpRestrictedLocked(uid, code, packageName)) {
                 return AppOpsManager.MODE_IGNORED;
             }
             code = AppOpsManager.opToSwitch(code);
@@ -1865,7 +1869,7 @@ public class AppOpsService extends IAppOpsService.Stub {
                 final int rawMode = uidState.opModes.get(code);
                 return raw ? rawMode : uidState.evalMode(code, rawMode);
             }
-            Op op = getOpLocked(code, uid, packageName, false, false);
+            Op op = getOpLocked(code, uid, packageName, false, verify, false);
             if (op == null) {
                 return AppOpsManager.opToDefaultMode(code);
             }
@@ -2035,6 +2039,7 @@ public class AppOpsService extends IAppOpsService.Stub {
         return noteOperationUnchecked(code, uid, resolvedPackageName, Process.INVALID_UID, null,
                 AppOpsManager.OP_FLAG_SELF);
     }
+    
     private int noteOperationUnchecked(int code, int uid, String packageName,
             int proxyUid, String proxyPackageName, @OpFlags int flags) {
         synchronized (this) {
@@ -2048,7 +2053,7 @@ public class AppOpsService extends IAppOpsService.Stub {
                 return AppOpsManager.MODE_ERRORED;
             }
             final Op op = getOpLocked(ops, code, true);
-            if (isOpRestrictedLocked(uid, code, packageName, isPrivileged)) {
+            if (isOpRestrictedLocked(uid, code, packageName)) {
                 scheduleOpNotedIfNeededLocked(code, uid, packageName,
                         AppOpsManager.MODE_IGNORED);
                 return AppOpsManager.MODE_IGNORED;
@@ -2225,7 +2230,7 @@ public class AppOpsService extends IAppOpsService.Stub {
                 return AppOpsManager.MODE_ERRORED;
             }
             final Op op = getOpLocked(ops, code, true);
-            if (isOpRestrictedLocked(uid, code, resolvedPackageName, isPrivileged)) {
+            if (isOpRestrictedLocked(uid, code, resolvedPackageName)) {
                 return AppOpsManager.MODE_IGNORED;
             }
             final int switchCode = AppOpsManager.opToSwitch(code);
