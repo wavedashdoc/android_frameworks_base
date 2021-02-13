@@ -139,7 +139,8 @@ public class BrightLineFalsingManager implements FalsingManager {
                 mMetricsLogger.histogram(FALSING_REMAIN_LOCKED, mIsFalseTouchCalls);
                 mIsFalseTouchCalls = 0;
             }
-        }
+        }    
+    }
 
     private void updateInteractionType(@Classifier.InteractionType int type) {
         logDebug("InteractionType: " + type);
