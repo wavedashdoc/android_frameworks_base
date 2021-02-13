@@ -794,14 +794,12 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
 
     private void processPhonebookAccess() {
         if (mDevice.getBondState() != BluetoothDevice.BOND_BONDED) return;
-
         ParcelUuid[] uuids = mDevice.getUuids();
         if (BluetoothUuid.containsAnyUuid(uuids, PbapServerProfile.PBAB_CLIENT_UUIDS)) {
             // The pairing dialog now warns of phone-book access for paired devices.
             // No separate prompt is displayed after pairing.
             if (mDevice.getPhonebookAccessPermission() == BluetoothDevice.ACCESS_UNKNOWN) {
-                if ((mDevice.getBluetoothClass() != null) &&
-                    (mDevice.getBluetoothClass().getDeviceClass()
+                if (mDevice.getBluetoothClass().getDeviceClass()
                         == BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE ||
                     mDevice.getBluetoothClass().getDeviceClass()
                         == BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET) {
