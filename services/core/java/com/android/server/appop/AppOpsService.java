@@ -4668,18 +4668,9 @@ private Ops getOpsRawLocked(int uid, String packageName, boolean edit,
         }
         
         @Override
-        public void setUidMode(int code, int uid, int mode) {
-            AppOpsService.this.setUidMode(code, uid, mode);
-        }
-        
-        @Override
         public void setAllPkgModesToDefault(int code, int uid) {
             AppOpsService.this.setAllPkgModesToDefault(code, uid);
         }
         
-        @Override
-        public @Mode int checkOperationUnchecked(int code, int uid, @NonNull String packageName) {
-            return AppOpsService.this.checkOperationUnchecked(code, uid, packageName, true, false);
-        }
     }
 }
