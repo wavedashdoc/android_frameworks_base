@@ -259,6 +259,31 @@ public final class NotificationEntry {
     public boolean isBubble() {
         return (notification.getNotification().flags & FLAG_BUBBLE) != 0;
     }
+    
+    public void setBubbleDismissed(boolean userDismissed) {
+        mUserDismissedBubble = userDismissed;
+    }
+    
+    public boolean isBubbleDismissed() {
+        return mUserDismissedBubble;
+    }
+    
+    /**
+     * Sets whether this notification should be shown in the shade when it is also displayed as a
+     * bubble.
+     */
+    public void setShowInShadeWhenBubble(boolean showInShade) {
+        mShowInShadeWhenBubble = showInShade;
+    }
+    
+    /**
+     * Whether this notification should be shown in the shade when it is also displayed as a
+     * bubble.
+     */
+    public boolean showInShadeWhenBubble() {
+        // We always show it in the shade if non-clearable
+        return !isRowDismissed() && (!isClearable() || mShowInShadeWhenBubble);
+    }
 
     /**
      * Returns the data needed for a bubble for this notification, if it exists.

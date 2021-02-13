@@ -34,10 +34,12 @@ import com.android.keyguard.KeyguardConstants;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.Dependency;
+import com.android.systemui.R;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.NotificationMediaManager;
+import com.android.systemui.tuner.TunerService;
 
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
