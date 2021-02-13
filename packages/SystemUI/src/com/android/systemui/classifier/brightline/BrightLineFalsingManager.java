@@ -34,6 +34,8 @@ import com.android.systemui.util.ProximitySensor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * FalsingManager designed to make clear why a touch was rejected.
@@ -138,7 +140,6 @@ public class BrightLineFalsingManager implements FalsingManager {
                 mIsFalseTouchCalls = 0;
             }
         }
-    }
 
     private void updateInteractionType(@Classifier.InteractionType int type) {
         logDebug("InteractionType: " + type);
