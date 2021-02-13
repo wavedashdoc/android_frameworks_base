@@ -3319,42 +3319,6 @@ public class NotificationPanelView extends PanelView implements
         return !isFullWidth() || !mShowIconsWhenExpanded;
     }
 
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN),
-                    false, this, UserHandle.USER_ALL);
-            update();
-        }
-
-        void unobserve() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.unregisterContentObserver(this);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            update();
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            update();
-        }
-
-        public void update() {
-            ContentResolver resolver = mContext.getContentResolver();
-            mOneFingerQuickSettingsIntercept = Settings.System.getIntForUser(
-                    resolver, Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN, 0,
-                    UserHandle.USER_CURRENT);
-        }
-    }
-
     private final FragmentListener mFragmentListener = new FragmentListener() {
         @Override
         public void onFragmentViewCreated(String tag, Fragment fragment) {

@@ -94,14 +94,26 @@ public class BrightLineFalsingManager implements FalsingManager {
         mClassifiers.add(proximityClassifier);
         mClassifiers.add(new ZigZagClassifier(mDataProvider));
     }
-
+    
     private void registerSensors() {
-        mProximitySensor.register(mSensorEventListener);
+        Sensor s = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        if (s != null) {
+            // This can be expensive, and doesn't need to happen on the main thread.
+            mBackgroundExecutor.submit(() -> {
+                logDebug("registering sensor listener");
+                mSensorManager.registerListener(
+                        mSensorEventListener, s, SensorManager.SENSOR_DELAY_GAME);
+            });
+        }
     }
-
-
+    
+    
     private void unregisterSensors() {
-        mProximitySensor.unregister(mSensorEventListener);
+        // This can be expensive, and doesn't need to happen on the main thread.
+        mBackgroundExecutor.submit(() -> {
+            logDebug("unregistering sensor listener");
+            mSensorManager.unregisterListener(mSensorEventListener);
+        });
     }
 
     private void sessionStart() {
