@@ -1830,6 +1830,14 @@ public class AppOpsService extends IAppOpsService.Stub {
         }
         return checkOperationUnchecked(code, uid, resolvedPackageName, raw);
     }
+    
+    /**
+     * @see #checkOperationUnchecked(int, int, String, boolean, boolean)
+     */
+    private @Mode int checkOperationUnchecked(int code, int uid, @NonNull String packageName,
+            boolean raw) {
+        return checkOperationUnchecked(code, uid, packageName, raw, true);
+    }
 
     /**
      * Get the mode of an app-op.
@@ -2027,19 +2035,11 @@ public class AppOpsService extends IAppOpsService.Stub {
         return noteOperationUnchecked(code, uid, resolvedPackageName, Process.INVALID_UID, null,
                 AppOpsManager.OP_FLAG_SELF);
     }
-
     private int noteOperationUnchecked(int code, int uid, String packageName,
             int proxyUid, String proxyPackageName, @OpFlags int flags) {
-        boolean isPrivileged;
-        try {
-            isPrivileged = verifyAndGetIsPrivileged(uid, packageName);
-        } catch (SecurityException e) {
-            Slog.e(TAG, "noteOperation", e);
-            return AppOpsManager.MODE_ERRORED;
-        }
-
         synchronized (this) {
-            final Ops ops = getOpsRawLocked(uid, packageName, isPrivileged, true /* edit */);
+            final Ops ops = getOpsRawLocked(uid, packageName, true /* edit */,
+                    false /* uidMismatchExpected */);
             if (ops == null) {
                 scheduleOpNotedIfNeededLocked(code, uid, packageName,
                         AppOpsManager.MODE_IGNORED);
@@ -2774,8 +2774,8 @@ public class AppOpsService extends IAppOpsService.Stub {
                 if (AppOpsManager.opAllowSystemBypassRestriction(code)) {
                     // If we are the system, bypass user restrictions for certain codes
                     synchronized (this) {
-                        Ops ops = getOpsRawLocked(uid, packageName, isPrivileged,
-                                true /* edit */);
+                        Ops ops = getOpsRawLocked(uid, packageName, true /* edit */,
+                                false /* uidMismatchExpected */);
                         if ((ops != null) && ops.isPrivileged) {
                             return false;
                         }
