@@ -218,7 +218,8 @@ public class SubscriptionInfo implements Parcelable {
                 info.mMcc, info.mMnc, info.mCountryIso, info.mIsEmbedded, info.mNativeAccessRules,
                 info.mCardString, info.mCardId, info.mIsOpportunistic,
                 info.mGroupUUID == null ? null : info.mGroupUUID.toString(), info.mIsGroupDisabled,
-                info.mCarrierId, info.mProfileClass, info.mSubscriptionType, info.mGroupOwner);
+                info.mCarrierId, info.mProfileClass, info.mSubscriptionType, info.mGroupOwner,
+                info.mCarrierConfigAccessRules);
     }
 
     /**
