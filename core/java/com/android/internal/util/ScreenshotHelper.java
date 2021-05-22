@@ -5,7 +5,6 @@ import static android.view.WindowManager.TAKE_SCREENSHOT_SELECTED_REGION;
 
 import android.annotation.NonNull;
 import android.annotation.Nullable;
-import android.annotation.NonNull;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
